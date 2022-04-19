@@ -29,7 +29,7 @@ public class RestHttpClientApp {
 		////////////////////////////////////////////////////////////////////////////////////////////
 		
 //		System.out.println("\n====================================\n");
-//		// 1.1 Http Get 방식 Request : JsonSimple lib 사용
+		// 1.1 Http Get 방식 Request : JsonSimple lib 사용
 //		RestHttpClientApp.getUserTest_JsonSimple();
 		
 //		System.out.println("\n====================================\n");
@@ -41,13 +41,55 @@ public class RestHttpClientApp {
 //		RestHttpClientApp.LoginTest_JsonSimple();
 		
 //		System.out.println("\n====================================\n");
-//		// 1.2 Http Post 방식 Request : CodeHaus lib 사용
+//		// 2.2 Http Post 방식 Request : CodeHaus lib 사용
 //		RestHttpClientApp.LoginTest_Codehaus();		
 	
+		//Product Test
+		System.out.println("\n====================================\n");
+		// 1.1 Http Get 방식 Request : JsonSimple lib 사용
+		RestHttpClientApp.getProductTest_JsonSimple();
+		
+		
 	}
 	
 	
 //================================================================//
+	//1.1 Http Protocol GET Request : JsonSimple 3rd party lib 사용
+	public static void getProductTest_JsonSimple() throws Exception {
+		
+		// HttpClient : Http Protocol 의 client 추상화 
+				HttpClient httpClient = new DefaultHttpClient();
+				
+				String url="http://127.0.0.1:8080/product/json/getProduct";
+						
+				// HttpGet : Http Protocol 의 GET 방식 Request
+				HttpGet httpGet = new HttpGet(url);
+				httpGet.setHeader("Accept", "application/json");
+				httpGet.setHeader("Content-Type", "application/json");
+				
+				// HttpResponse : Http Protocol 응답 Message 추상화
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				
+				//==> Response 확인
+				System.out.println(httpResponse);
+				System.out.println();
+
+				//==> Response 중 entity(DATA) 확인
+				HttpEntity httpEntity = httpResponse.getEntity();
+				
+				//==> InputStream 생성
+				InputStream is = httpEntity.getContent();
+				BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+				
+				System.out.println("[ Server 에서 받은 Data 확인 ] ");
+				String serverData = br.readLine();
+				System.out.println(serverData);
+				
+				//==> 내용읽기(JSON Value 확인)
+				JSONObject jsonobj = (JSONObject)JSONValue.parse(serverData);
+				System.out.println(jsonobj);
+	}
+	
 	//1.1 Http Protocol GET Request : JsonSimple 3rd party lib 사용
 	public static void getUserTest_JsonSimple() throws Exception{
 		
